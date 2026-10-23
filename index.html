@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đề Thi Azota Địa Lý & Lịch Sử</title>
+
+    <style>
+        /* Giao diện chung */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 24px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Khung đăng nhập */
+        #login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        #login-box h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        #login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        #login-box button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        #login-box button:hover {
+            background-color: #0056b3;
+        }
+
+        #login-box button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #error-msg {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* Nội dung sau khi đăng nhập */
+        #main-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .header-title {
+            color: #198754;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .azota-main-btn {
+            display: block;
+            background-color: #ffc107;
+            color: #212529;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 25px;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .azota-main-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .list-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            border-left: 5px solid #198754;
+            padding-left: 10px;
+            margin: 25px 0 15px;
+        }
+
+        /* Tiêu đề riêng cho Lịch Sử */
+        .history-title {
+            border-left-color: #0d6efd;
+        }
+
+        .link-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .link-item span {
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .link-item a {
+            color: #0d6efd;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+        }
+
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            #main-content {
+                padding: 22px;
+            }
+
+            #login-box {
+                padding: 24px;
+            }
+
+            .header-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PHẦN 1: KHUNG ĐĂNG NHẬP -->
+    <div id="login-box">
+        <h2>🔒 Yêu Cầu Mật Khẩu</h2>
+        <p>Vui lòng nhập mật khẩu để truy cập kho đề thi.</p>
+
+        <form id="login-form">
+            <input
+                type="password"
+                id="password"
+                placeholder="Nhập mật khẩu tại đây..."
+                autocomplete="current-password"
+                aria-label="Mật khẩu"
+                required
+            >
+
+            <button type="submit">Xác Nhận</button>
+        </form>
+
+        <div id="error-msg" role="status" aria-live="polite"></div>
+    </div>
+
+
+    <!-- PHẦN 2: NỘI DUNG CHÍNH -->
+    <main id="main-content">
+
+        <h2 class="header-title">Trang Quản Lý Đề Thi Azota</h2>
+
+        <!-- NÚT ĐI ĐẾN TRANG CHỦ AZOTA -->
+        <a
+            href="https://azota.vn"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="azota-main-btn"
+        >
+            🔗 Đi đến Trang chủ Azota
+        </a>
+
+
+        <!-- DANH SÁCH ĐỀ THI ĐỊA LÝ -->
+        <section aria-labelledby="geography-heading">
+
+            <h3 class="list-title" id="geography-heading">
+                Danh Sách Đề Thi Địa Lý
+            </h3>
+
+            <div class="link-item">
+                <span>Đề thi Địa lý 01:</span>
+                <a
+                    href="https://azota.vn/de-thi/xtjrqu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/xtjrqu</a>
+            </div>
+
+            <div class="link-item">
+                <span>Đề thi Địa lý 02:</span>
+                <a
+                    href="https://azota.vn/de-thi/fcgiem"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/fcgiem</a>
+            </div>
+
+            <div class="link-item">
+                <span>Đề thi Địa lý 03:</span>
+                <a
+                    href="https://azota.vn/de-thi/ujiwv3"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/ujiwv3</a>
+            </div>
+
+        </section>
+
+
+        <!-- DANH SÁCH ĐỀ THI LỊCH SỬ MỚI -->
+        <section aria-labelledby="history-heading">
+
+            <h3 class="list-title history-title" id="history-heading">
+                Danh Sách Đề Thi Lịch Sử
+            </h3>
+
+            <!-- BÀI 1 -->
+            <div class="link-item">
+                <span>Bài 1:</span>
+                <a
+                    href="https://azota.vn/de-thi/wqldnj"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/wqldnj</a>
+            </div>
+
+            <!-- BÀI 2 -->
+            <div class="link-item">
+                <span>Bài 2:</span>
+                <a
+                    href="https://azota.vn/de-thi/pl328g"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/pl328g</a>
+            </div>
+
+            <!-- BÀI 3 -->
+            <div class="link-item">
+                <span>Bài 3:</span>
+                <a
+                    href="https://azota.vn/de-thi/y2wdoa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/y2wdoa</a>
+            </div>
+
+            <!-- BÀI 4 -->
+            <div class="link-item">
+                <span>Bài 4:</span>
+                <a
+                    href="https://azota.vn/de-thi/wxrucl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >https://azota.vn/de-thi/wxrucl</a>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PHẦN 3: XỬ LÝ ĐĂNG NHẬP -->
+    <script>
+        let wrongAttempts = 0;
+
+        const maxAttempts = 3;
+        const correctPass = "010203040506070809";
+
+        const loginForm = document.getElementById("login-form");
+        const passwordInput = document.getElementById("password");
+        const errorMsg = document.getElementById("error-msg");
+        const loginBox = document.getElementById("login-box");
+        const mainContent = document.getElementById("main-content");
+
+        // Xác nhận bằng nút hoặc phím Enter
+        loginForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            checkPassword();
+        });
+
+        function checkPassword() {
+
+            // Không tiếp tục nếu đã hết lượt thử
+            if (wrongAttempts >= maxAttempts) {
+                return;
+            }
+
+            const inputPass = passwordInput.value;
+
+            if (inputPass === correctPass) {
+
+                // Mật khẩu đúng: ẩn đăng nhập, hiện danh sách đề
+                loginBox.style.display = "none";
+                mainContent.style.display = "block";
+
+                mainContent.setAttribute("tabindex", "-1");
+                mainContent.focus();
+
+            } else {
+
+                wrongAttempts++;
+                passwordInput.value = "";
+
+                if (wrongAttempts === 1) {
+
+                    errorMsg.style.color = "red";
+                    errorMsg.textContent =
+                        "❌ Mật khẩu không đúng! Bạn còn 2 lần thử.";
+
+                } else if (wrongAttempts === 2) {
+
+                    errorMsg.style.color = "#cc0000";
+                    errorMsg.textContent =
+                        "⚠️ CẢNH BÁO LẦN CUỐI CÙNG! " +
+                        "Nhập sai thêm 1 lần nữa hệ thống sẽ khóa đăng nhập.";
+
+                } else {
+
+                    // Sai lần thứ 3: khóa khung đăng nhập
+                    errorMsg.style.color = "black";
+                    errorMsg.textContent =
+                        "🚫 Đã khóa khung đăng nhập do nhập sai quá số lần cho phép.";
+
+                    passwordInput.disabled = true;
+
+                    const submitButton =
+                        loginForm.querySelector('button[type="submit"]');
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = "Đã khóa";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
